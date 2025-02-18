@@ -1,0 +1,30 @@
+name: ✅ Task
+description: Tarefa para implementação de uma Feature
+labels: ["Task"]
+body:
+  - type: input
+    id: parent-issue
+    attributes:
+      label: Issue Pai (se aplicável)
+      description: "Se esta tarefa pertence a uma Feature, informe o número da Issue principal"
+      placeholder: "#123"
+  - type: dropdown
+    id: iteration
+    attributes:
+      label: Iteração
+      description: "Se esta tarefa pertence a uma Iteração, selecione"
+      multiple: false
+      options:
+        - Sprint Atual
+        - Próxima Sprint
+        - Backlog
+    validations:
+      required: false
+  - type: textarea
+    id: descricao
+    attributes:
+      label: Descrição
+      description: "Detalhes da tarefa a ser realizada"
+      placeholder: "Exemplo: Implementar validação de e-mail no cadastro de usuários"
+    validations:
+      required: true
