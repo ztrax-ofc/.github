@@ -1,0 +1,16 @@
+name: Feature
+description: Criação de funcionalidade
+labels: ["Feature"]
+body:
+  - type: textarea
+    id: descricao
+    attributes:
+      label: Descrição
+      description: |
+        Formato esperado:
+        **SENDO** um [quem é o usuário ou papel]
+        **QUERO** [o que deseja fazer]
+        **PARA** [qual o benefício esperado]
+      placeholder: "Exemplo: Sendo um administrador, quero gerenciar permissões para facilitar o controle de acesso."
+    validations:
+      required: true
