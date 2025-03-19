@@ -1,0 +1,84 @@
+name: 🚀 Issue Automation
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  issues: write
+  repository-projects: write
+
+jobs:
+  update_issue_fields:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Definir Issue Type (Feature/Task)
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const issueNumber = context.payload.issue.number;
+            const repo = context.repo.repo;
+            const owner = context.repo.owner;
+            const labels = context.payload.issue.labels.map(label => label.name);
+
+            let issueType = null;
+
+            if (labels.includes("User story")) {
+              issueType = "Feature";
+            } else if (labels.includes("Task")) {
+              issueType = "Task";
+            }
+
+            if (issueType) {
+              await github.rest.issues.update({
+                owner,
+                repo,
+                issue_number: issueNumber,
+                title: `[${issueType}] ${context.payload.issue.title}`
+              });
+              console.log(`Issue #${issueNumber} marcada como tipo "${issueType}"`);
+            }
+
+      - name: Herdar Iteration (Sprint) da Issue Pai
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const issueNumber = context.payload.issue.number;
+            const repo = context.repo.repo;
+            const owner = context.repo.owner;
+            const issueBody = context.payload.issue.body;
+
+            // Buscar referência da issue pai no corpo da sub-issue
+            const parentIssueMatch = issueBody.match(/#(\d+)/);
+            if (!parentIssueMatch) {
+              console.log("Nenhuma issue pai encontrada.");
+              return;
+            }
+
+            const parentIssueNumber = parentIssueMatch[1];
+
+            // Buscar Iteration da issue pai
+            const parentIssue = await github.rest.issues.get({
+              owner,
+              repo,
+              issue_number: parentIssueNumber
+            });
+
+            const iterationField = parentIssue.data.milestone?.title;
+            if (!iterationField) {
+              console.log("Nenhuma Sprint (Iteration) encontrada na issue pai.");
+              return;
+            }
+
+            // Atualizar a sub-issue com a mesma Sprint da issue pai
+            await github.rest.issues.update({
+              owner,
+              repo,
+              issue_number: issueNumber,
+              milestone: parentIssue.data.milestone.number
+            });
+
+            console.log(`Sprint "${iterationField}" herdado da issue #${parentIssueNumber}`);
+
