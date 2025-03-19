@@ -7,12 +7,14 @@ on:
 permissions:
   issues: write
   repository-projects: write
+  actions: read
+  contents: read
 
 jobs:
   update_issue_fields:
     runs-on: ubuntu-latest
     steps:
-      - name: Definir Issue Type (Feature/Task)
+      - name: Definir Issue Type no GitHub Projects
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -30,55 +32,53 @@ jobs:
               issueType = "Task";
             }
 
-            if (issueType) {
-              await github.rest.issues.update({
-                owner,
-                repo,
-                issue_number: issueNumber,
-                title: `[${issueType}] ${context.payload.issue.title}`
-              });
-              console.log(`Issue #${issueNumber} marcada como tipo "${issueType}"`);
-            }
-
-      - name: Herdar Iteration (Sprint) da Issue Pai
-        uses: actions/github-script@v7
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const issueNumber = context.payload.issue.number;
-            const repo = context.repo.repo;
-            const owner = context.repo.owner;
-            const issueBody = context.payload.issue.body;
-
-            // Buscar referência da issue pai no corpo da sub-issue
-            const parentIssueMatch = issueBody.match(/#(\d+)/);
-            if (!parentIssueMatch) {
-              console.log("Nenhuma issue pai encontrada.");
+            if (!issueType) {
+              console.log("A issue não é uma Feature nem uma Task.");
               return;
             }
 
-            const parentIssueNumber = parentIssueMatch[1];
-
-            // Buscar Iteration da issue pai
-            const parentIssue = await github.rest.issues.get({
+            // 1️⃣ Buscar a Issue no Projeto para encontrar o ID do Item
+            const projects = await github.rest.projects.listForRepo({
               owner,
-              repo,
-              issue_number: parentIssueNumber
+              repo
             });
 
-            const iterationField = parentIssue.data.milestone?.title;
-            if (!iterationField) {
-              console.log("Nenhuma Sprint (Iteration) encontrada na issue pai.");
+            if (!projects.data.length) {
+              console.log("Nenhum projeto encontrado.");
               return;
             }
 
-            // Atualizar a sub-issue com a mesma Sprint da issue pai
-            await github.rest.issues.update({
-              owner,
-              repo,
-              issue_number: issueNumber,
-              milestone: parentIssue.data.milestone.number
+            const projectId = projects.data[0].id; // Pegando o primeiro projeto
+
+            const items = await github.rest.projects.listCards({
+              project_id: projectId
             });
 
-            console.log(`Sprint "${iterationField}" herdado da issue #${parentIssueNumber}`);
+            const issueItem = items.data.find(card => 
+              card.content_url && card.content_url.includes(`/issues/${issueNumber}`)
+            );
+
+            if (!issueItem) {
+              console.log("A issue não está no projeto.");
+              return;
+            }
+
+            // 2️⃣ Buscar os campos do Projeto para encontrar "Issue Type"
+            const fields = await github.rest.projects.getProject({
+              project_id: projectId
+            });
+
+            const issueTypeField = fields.data.fields.find(field => field.name === "Issue Type");
+            if (!issueTypeField) {
+              console.log('Campo "Issue Type" não encontrado no projeto.');
+              return;
+            }
+
+            // 3️⃣ Atualizar o campo "Issue Type" no GitHub Projects
+            await github.rest.projects.updateCard({
+              card_id: issueItem.id,
+              note: `Issue Type: ${issueType}`
+            });
+
+            console.log(`Issue #${issueNumber} marcada como "${issueType}" no projeto.`);
 
