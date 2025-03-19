@@ -8,18 +8,6 @@ body:
       label: Issue Pai (se aplicável)
       description: "Se esta tarefa pertence a uma Feature, informe o número da Issue principal"
       placeholder: "#123"
-  - type: dropdown
-    id: iteration
-    attributes:
-      label: Iteração
-      description: "Se esta tarefa pertence a uma Iteração, selecione"
-      multiple: false
-      options:
-        - Sprint Atual
-        - Próxima Sprint
-        - Backlog
-    validations:
-      required: false
   - type: textarea
     id: descricao
     attributes:

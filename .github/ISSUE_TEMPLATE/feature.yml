@@ -1,6 +1,6 @@
 name: Feature
 description: Criação de funcionalidade
-labels: ["Feature"]
+labels: ["User story"]
 body:
   - type: textarea
     id: descricao
