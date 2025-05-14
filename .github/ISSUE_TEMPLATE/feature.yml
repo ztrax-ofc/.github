@@ -1,16 +1,25 @@
-name: Feature
+name: User Story
 description: Criação de funcionalidade
-labels: ["User story"]
+projects: ["ztrax-ofc/board"]
+type: "Feature"
 body:
   - type: textarea
     id: descricao
     attributes:
       label: Descrição
       description: |
-        Formato esperado:
-        **SENDO** um [quem é o usuário ou papel]
-        **QUERO** [o que deseja fazer]
-        **PARA** [qual o benefício esperado]
-      placeholder: "Exemplo: Sendo um administrador, quero gerenciar permissões para facilitar o controle de acesso."
+        ## 🧾 User Story
+        
+        **COMO** usuário do sistema de rastreamento  
+        **QUERO** ser capaz de visualizar todos os pontos no modo presença estando dentro de uma área definida do mapa  
+        **PARA** que eu possa saber o local aproximado onde meu ativo se encontra
+        
+        ---
+        
+        ## ✅ Critérios de Aceite
+        
+        - [ ] Aceite item
+        
+        ---
     validations:
       required: true
