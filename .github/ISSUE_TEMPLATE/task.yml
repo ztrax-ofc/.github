@@ -1,13 +1,7 @@
 name: ✅ Task
-description: Tarefa para implementação de uma Feature
-labels: ["Task"]
+description: Tarefa para implementação de uma User Story
+type: "Task"
 body:
-  - type: input
-    id: parent-issue
-    attributes:
-      label: Issue Pai (se aplicável)
-      description: "Se esta tarefa pertence a uma Feature, informe o número da Issue principal"
-      placeholder: "#123"
   - type: textarea
     id: descricao
     attributes:
