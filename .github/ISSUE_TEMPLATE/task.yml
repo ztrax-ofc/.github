@@ -1,6 +1,7 @@
 name: ✅ Task
 description: Tarefa para implementação de uma User Story
 type: "Task"
+projects: ["ztrax-ofc/board"]
 body:
   - type: textarea
     id: descricao
