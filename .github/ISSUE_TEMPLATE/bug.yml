@@ -1,0 +1,13 @@
+name: 🐞 Bug
+description: Bug para corrigir
+type: "Bug"
+projects: ["ztrax-ofc/board"]
+body:
+  - type: textarea
+    id: descricao
+    attributes:
+      label: Descrição
+      description: "Detalhes do bug"
+      placeholder: "Exemplo: Nenhuma mensagem de erro exibida ao dar erro no login"
+    validations:
+      required: true
