@@ -3,8 +3,7 @@ name: 🐛 Bug Report
 description: Relate um problema ou erro encontrado no sistema.
 title: "[BUG]: "
 labels: bug, to-do
-projects:
-  - project: ztrax-ofc/2
+projects: ["ztrax-ofc/2"]
   fields: 
     Tipo: Bug
 body:
