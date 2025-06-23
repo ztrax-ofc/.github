@@ -1,0 +1,62 @@
+name: 🐛 Bug Report
+description: Relate um problema ou erro encontrado no sistema.
+title: "[BUG]: "
+labels: bug, to-do
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Obrigado por dedicar seu tempo para nos ajudar a melhorar o sistema!
+  - type: input
+    id: summary
+    attributes:
+      label: Resumo do Bug
+      description: Uma breve descrição do problema.
+      placeholder: Ex: Botão de login não funciona em navegadores específicos.
+    validations:
+      required: true
+  - type: textarea
+    id: steps_to_reproduce
+    attributes:
+      label: Passos para Reproduzir
+      description: Descreva os passos para reproduzir o bug. Por favor, seja o mais detalhado possível.
+      placeholder: |
+        1. Vá para '...'
+        2. Clique em '....'
+        3. Role para '....'
+        4. Observe o erro
+    validations:
+      required: true
+  - type: textarea
+    id: expected_behavior
+    attributes:
+      label: Comportamento Esperado
+      description: Descreva o que você esperava que acontecesse.
+    validations:
+      required: true
+  - type: textarea
+    id: actual_behavior
+    attributes:
+      label: Comportamento Atual
+      description: Descreva o que realmente acontece.
+    validations:
+      required: true
+  - type: dropdown
+    id: browser
+    attributes:
+      label: Navegador
+      description: Qual navegador você estava usando quando encontrou o bug?
+      options:
+        - Chrome
+        - Firefox
+        - Safari
+        - Edge
+        - Outro (por favor, especifique no contexto adicional)
+    validations:
+      required: true
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: Contexto Adicional (Opcional)
+      description: Adicione qualquer outro contexto sobre o problema aqui (logs, capturas de tela, etc.). Você pode anexar arquivos diretamente à issue após a criação.
+      render: markdown
